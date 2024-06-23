@@ -1,63 +1,106 @@
-// import UserNavBar from "@/components/UserNavBar";
-// import { getUserToken } from "@/utils/getUserToken";
-// import Head from "next/head";
-// import Image from "next/image";
-// import { useRouter } from "next/router";
+import { useParams } from "react-router-dom";
+import UserNavBar from "../components/Navbar";
 import { useEffect, useState } from "react";
+import axios from "axios";
 
 function EventPage() {
-  // const router = useRouter();
-  // const eventId = router.query.eventId;
+  const { id } = useParams();
   // const userId = getUserToken();
+  const [data, setData] = useState(null);
+  const [isLoading, setIsLoading] = useState(true); // Add loading state
+
   const [eventData, setEventData] = useState([]);
   const [isUserRegistered, setIsUserRegistered] = useState(false);
 
   // function to handle share button click
-  const share = () => {
-    if (navigator.share) {
-      navigator
-        .share({
-          title: eventData.name,
-          text: "Check out this event!",
-          url: window.location.href,
-        })
-        .then(() => console.log("Successful share"))
-        .catch((error) => console.log("Error sharing", error));
-    }
-  };
+  // const share = () => {
+  //   if (navigator.share) {
+  //     navigator
+  //       .share({
+  //         title: eventData.name,
+  //         text: "Check out this event!",
+  //         url: window.location.href,
+  //       })
+  //       .then(() => console.log("Successful share"))
+  //       .catch((error) => console.log("Error sharing", error));
+  //   }
+  // };
 
   // function that fetches the event data on load
-  const fetchEvent = async () => {
-    try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/getevent`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            // event_id: eventId,
-          }),
-        }
-      );
-      if (response.ok) {
-        const data = await response.json();
-        setEventData(data);
-        // Check if the user's ID exists in the participants array
-        setIsUserRegistered(
-          data.participants
-            .some
-            // (participant) => participant.id === userId
-            ()
+  // const fetchEvent = async () => {
+  //   try {
+  //     const response = await fetch(
+  //       `http://127.0.0.1:8000/events/${eventId}/`,
+  //       {
+  //         method: "POST",
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //         },
+  //         body: JSON.stringify({
+  //           // event_id: eventId,
+  //         }),
+  //       }
+  //     );
+  //     if (response.ok) {
+  //       const data = await response.json();
+  //       setEventData(data);
+  //       // Check if the user's ID exists in the participants array
+  //       setIsUserRegistered(
+  //         data.participants
+  //           .some
+  //           // (participant) => participant.id === userId
+  //           ()
+  //       );
+  //     } else {
+  //       throw new Error(`${response.status} ${response.statusText}`);
+  //     }
+  //   } catch (error) {
+  //     console.error("Error fetching event data:", error.message);
+  //   }
+  // };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      // const token = sessionStorage.getItem("token");
+      try {
+        const response = await axios.get(
+          `http://127.0.0.1:8000/events/${id}/`,
+          {
+            headers: {
+              Authorization: `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzE5MTI4NjY1LCJpYXQiOjE3MTkxMjgzNjUsImp0aSI6IjAyY2ZhNjYzNjY1YzQ4MzZhNWJmZGEyZTBhOTBhNWY5IiwidXNlcl9pZCI6Mn0.l5pWnv6w7a8gV3mimzdK5fk2V1pLE1H1nh-fQaWQBHA`,
+            },
+          }
         );
-      } else {
-        throw new Error(`${response.status} ${response.statusText}`);
+        console.log("response", response.data);
+        setData(response.data);
+      } catch (error) {
+        console.error("Error fetching data", error);
+      } finally {
+        setIsLoading(false); // Set loading to false once data is fetched
       }
-    } catch (error) {
-      console.error("Error fetching event data:", error.message);
-    }
+    };
+
+    fetchData();
+  }, [id]);
+
+  const formatDate = (isoDate) => {
+    const date = new Date(isoDate);
+    return date.toLocaleString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      hour: "numeric",
+      minute: "numeric",
+    });
   };
+
+  if (isLoading) {
+    return <div>Loading...</div>; // Display loading state
+  }
+
+  if (!data) {
+    return <div>Error loading data.</div>; // Display error state if data is not available
+  }
 
   // useEffect(() => {
   //     fetchEvent();
@@ -69,35 +112,31 @@ function EventPage() {
   // else
   return (
     <div className="pt-20 lg:pt-8 bg-[color:var(--primary-color)]">
-      {/* <UserNavBar /> */}
+      <UserNavBar />
       <div className="flex flex-col items-center justify-center">
-        {/* <Head> */}
-        <title>{eventData.name}</title>
-        <title>Name</title>
-        {/* </Head> */}
-        {/* Top div with image */}
         <div className="relative h-40 sm:h-[25rem] overflow-hidden container shadow-lg">
           {/* blurred image background */}
           <img
             // src={eventData.cover}
             src="/img/eventsFormImg.jpg"
-            alt={eventData.name}
+            // alt={eventData.name}
+            alt={""}
             fill
             placeholder="blur"
-            blurDataURL={eventData.cover}
-            className="h-[25rem] container filter blur hidden lg:block object-cover"
+            // blurDataURL={eventData.cover}
+            className="h-[25rem] container  lg:block object-cover"
           />
 
-          <div className="absolute inset-0 w-full h-40 sm:h-[25rem] container">
+          {/* <div className="absolute inset-0 w-full h-40 sm:h-[25rem] container">
             <img
               // src="https://assets-in.bmscdn.com/nmcms/events/banner/desktop/media-desktop-jo-bolta-hai-wohi-hota-hai-ft-harsh-gujral-0-2023-2-3-t-9-23-51.jpg"
               // src={eventData.cover}
-              src="/img/eventsFormImg.jpg"
+              // src="/img/eventsFormImg.jpg"
               alt="Eventimage"
               fill
               className="absolute object-contain object-center"
             />
-          </div>
+          </div> */}
         </div>
 
         {/* Second div with event details and ticket pricing */}
@@ -106,23 +145,24 @@ function EventPage() {
             <div className="flex flex-col lg:flex-row lg:items-center justify-between">
               <div className="flex flex-col">
                 <h1 className="text-4xl font-bold text-gray-900 mb-2">
-                  {eventData.name}
-                  DJ
+                  {data.title || "Event Name"}
                 </h1>
                 <div className="flex flex-col md:flex-row">
                   <div className="text-md text-gray-800 mr-4">
-                    <span className="font-bold">Date:</span> {eventData.date} 10/02/2024
+                    <span className="font-bold">Date & time:</span>{" "}
+                    {data.date ? data.date.split("-").slice(0, 3).join("-") : "Date"}
                   </div>
                   <div className="text-md text-gray-800 mr-4">
-                    <span className="font-bold">Time:</span> {eventData.time} 09:00 PM
+                    <span className="font-bold">Time:</span>                     
+                    {data.time}
                   </div>
-                  <div className="text-md text-gray-800 mr-4">
-                    <span className="font-bold">Venue:</span> {eventData.venue} Bengaluru
+                  {/* <div className="text-md text-gray-800 mr-4">
+                    <span className="font-bold">Venue:</span> {data.venue} Bengaluru
                   </div>
                   <div className="text-md text-gray-800 mr-4">
                     <span className="font-bold">Organizer:</span>{" "} DJ Khaled
                     {eventData.organizer}
-                  </div>
+                  </div> */}
                 </div>
               </div>
               {/* <div className="text-left lg:text-right mt-4 lg:mt-0">
@@ -167,33 +207,26 @@ function EventPage() {
         {/* <div className="container mt-4 bg-[color:var(--primary-color)]">
           <div className="container">
             <div className="grid grid-cols-2 md:grid-cols-[2fr_1fr] gap-4"> */}
-              {/* <div className="mb-4 max-w-5xl bg-white px-6 py-4 rounded-lg shadow-md"> */}
+        {/* <div className="mb-4 max-w-5xl bg-white px-6 py-4 rounded-lg shadow-md"> */}
 
-
-
-              <div className="container bg-white py-4 mt-4 rounded-lg shadow-md">
+        <div className="container bg-white py-4 mt-4 rounded-lg shadow-md">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex flex-col lg:flex-row lg:items-center justify-between">
-              <div className="flex flex-col">
-
-
-
-
-
-              {/* <div className="mb-4 w-full bg-black px-6 py-4 rounded-lg shadow-md"> */}
+            <div className="lg:flex-row lg:items-center justify-between">
+              <div className=" ">
+                {/* <div className="mb-4 w-full bg-black px-6 py-4 rounded-lg shadow-md"> */}
                 <h3 className="text-xl font-semibold text-gray-900 mb-2">
                   About the Event
                 </h3>
                 {/* {Array(3)
                   .fill()
                   .map((_, index) => ( */}
-                    <p 
-                    // key={index} 
-                    className="text-gray-600 text-md">
-                      {eventData.description}
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                    </p>
-                  {/* ))} */}
+                <p
+                  // key={index}
+                  className="text-gray-600 text-lg "
+                >
+                  {data.description}
+                </p>
+                {/* ))} */}
               </div>
               {/* <div className="mb-4 bg-white px-6 py-4 rounded-lg shadow-md">
                 <h3 className="text-xl font-semibold text-gray-900 mb-2">

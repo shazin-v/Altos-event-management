@@ -17,7 +17,7 @@ function App() {
           <Route path="/signup" element={<Signup />} />
           <Route path="/homepage" element={<HomePage />} />
           <Route path="/add-event" element={<CreateEventForm />} />
-          <Route path="/event/1" element={<EventId />} />
+          <Route path="/event/:id" element={<EventId />} />
         </Routes>
       </BrowserRouter>
     </>

@@ -1,76 +1,53 @@
-// import { getAdminToken } from "@/utils/getAdminToken";
-// import { useRouter } from "next/router";
 import { useState } from "react";
 import Navbar from "../components/Navbar";
+import { jwtDecode } from "jwt-decode";
+import axios from "axios";
 
 const CreateEventForm = () => {
-  // const router = useRouter();
-  // const admin_id = getAdminToken();
+  const token = sessionStorage.getItem("token");
+  const decoded = jwtDecode(token);
+  const UID = decoded.user_id;
 
   const [formData, setFormData] = useState({
-    name: "",
-    venue: "",
-    organizer: "",
-    datetime: "",
-    price: "",
-    profile: "",
-    cover: "",
+    title: "",
+    date: "",
+    time: "",
     description: "",
+    capacity: 0,
   });
 
-  // function to handle the event form submission
   const handleEventFormSubmit = async (e) => {
     e.preventDefault();
 
-    // Format date and time for server request
-    const datetemp = new Date(formData.datetime);
-    const formattedDate = datetemp.toLocaleDateString("en-IN", {
-      year: "numeric",
-      month: "2-digit",
-      day: "2-digit",
-    });
-    const formattedTime = datetemp.toLocaleTimeString("en-US", {
-      hour: "numeric",
-      minute: "numeric",
-      hour12: true,
-    });
-    const date = `${formattedDate}`;
-    const time = `${formattedTime}`;
-
-    // Set up request body with form data and admin ID
     const requestBody = {
-      name: formData.name,
-      venue: formData.venue,
-      organizer: formData.organizer,
-      date: date,
-      time: time,
+      title: formData.title,
       description: formData.description,
-      price: formData.price,
-      profile: formData.profile != "" ? formData.profile : undefined,
-      cover: formData.cover != "" ? formData.cover : undefined,
-      // admin_id: admin_id,
+      date: formData.date,
+      capacity: parseInt(formData.capacity, 10),
+      time: formData.time,
+      user: UID,
     };
 
-    // Send POST request to server with request body
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/post/event`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(requestBody),
+    try {
+      const response = await axios.post(
+        "http://127.0.0.1:8000/events/",
+        requestBody,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: token,
+          },
+        }
+      );
+
+      if (response.status === 201) {
+        alert("Event Created Successfully");
+        window.location.href = "/homepage";
+      } else {
+        alert(`Failed with status code ${response.status}`);
       }
-    );
-    const data = await response.json();
-    if (response.status === 200) {
-      // If request was successful, show success message and redirect to dashboard
-      alert("Event Created Successfully");
-      // router.push("/admin/dashboard");
-      window.location.href = "/homepage";
-    } else {
-      // If request failed, log error message to console
-      console.error(`Failed with status code ${response.status}`);
+    } catch (error) {
+      alert("Error creating event", error);
     }
   };
 
@@ -85,7 +62,7 @@ const CreateEventForm = () => {
     <div className="pt-20 lg:pt-8 bg-[color:var(--primary-color)]">
       <Navbar />
       <center className="p-6">
-        <div className="flex flex-col md:h-[calc(120vh)] md:w-[90%] md:flex-row justify-center bg-[color:var(--primary-color)]">
+        <div className="flex flex-col md:h-[calc(90vh)] md:w-[90%] md:flex-row justify-center bg-[color:var(--primary-color)]">
           <div className="flex-2 mx-6 mb-6 bg-[color:var(--primary-color)]">
             <img
               src="/img/eventsFormImg.jpg"
@@ -93,20 +70,14 @@ const CreateEventForm = () => {
               width={500}
               height={500}
               className="w-full h-full object-contain md:object-cover rounded-lg shadow-lg"
-              />
+            />
           </div>
           <div className="flex-1 m-6 md:m-0 md:mr-6 md:mb-6"></div>
-
           <div className="flex h-80vh text-left bg-white rounded-lg shadow-lg items-center">
             <div className="p-8 w-full">
               <h1 className="text-2xl font-bold text-gray-700 mb-4">
                 Create an Event
               </h1>
-              {/* {message && (
-                    <h1 className="rounded p-3 my-2 bg-green-200 text-green-600 font-medium">
-                        {message}
-                    </h1>
-                )} */}
               <form
                 id="event-form"
                 onSubmit={handleEventFormSubmit}
@@ -114,122 +85,72 @@ const CreateEventForm = () => {
               >
                 <div>
                   <label
-                    htmlFor="name"
+                    htmlFor="title"
                     className="block font-medium text-gray-700"
                   >
                     Title:
                   </label>
                   <input
                     type="text"
-                    id="name"
-                    name="name"
+                    id="title"
+                    name="title"
                     className="adminDropDownInput"
-                    value={formData.name}
+                    value={formData.title}
                     onChange={handleChange}
                     required
                   />
+                  <div>
+                    <label
+                      htmlFor="capacity"
+                      className="block font-medium text-gray-700"
+                    >
+                      Capacity:
+                    </label>
+                    <input
+                      type="number"
+                      id="capacity"
+                      name="capacity"
+                      min="0"
+                      className="adminDropDownInput"
+                      value={formData.capacity}
+                      onChange={handleChange}
+                      required
+                    />
+                  </div>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
                     <label
-                      htmlFor="venue"
+                      htmlFor="date"
                       className="block font-medium text-gray-700"
                     >
-                      Venue:
+                      Date:
                     </label>
                     <input
-                      type="text"
-                      id="venue"
-                      name="venue"
+                      type="date"
+                      id="date"
+                      name="date"
                       className="adminDropDownInput"
-                      value={formData.venue}
+                      value={formData.date}
                       onChange={handleChange}
                       required
                     />
                   </div>
                   <div>
                     <label
-                      htmlFor="organizer"
+                      htmlFor="time"
                       className="block font-medium text-gray-700"
                     >
-                      Organizer:
+                      Time:
                     </label>
                     <input
-                      type="text"
-                      id="organizer"
-                      name="organizer"
+                      type="time"
+                      id="time"
+                      name="time"
                       className="adminDropDownInput"
-                      value={formData.organizer}
+                      value={formData.time}
                       onChange={handleChange}
                       required
-                    />
-                  </div>
-                  <div>
-                    <label
-                      htmlFor="datetime"
-                      className="block font-medium text-gray-700"
-                    >
-                      Date and Time:
-                    </label>
-                    <input
-                      type="datetime-local"
-                      id="datetime"
-                      name="datetime"
-                      className="adminDropDownInput"
-                      value={formData.datetime}
-                      onChange={handleChange}
-                      required
-                    />
-                  </div>
-                  <div>
-                    <label
-                      htmlFor="price"
-                      className="block font-medium text-gray-700"
-                    >
-                      Price:
-                    </label>
-                    <input
-                      type="number"
-                      id="price"
-                      name="price"
-                      min="0"
-                      max="3000"
-                      className="adminDropDownInput"
-                      value={formData.price}
-                      onChange={handleChange}
-                      required
-                    />
-                  </div>
-                  <div>
-                    <label
-                      htmlFor="profile"
-                      className="block font-medium text-gray-700"
-                    >
-                      Profile Image URL:
-                    </label>
-                    <input
-                      type="url"
-                      id="profile"
-                      name="profile"
-                      className="adminDropDownInput"
-                      value={formData.profile}
-                      onChange={handleChange}
-                    />
-                  </div>
-                  <div>
-                    <label
-                      htmlFor="cover"
-                      className="block font-medium text-gray-700"
-                    >
-                      Cover Image URL:
-                    </label>
-                    <input
-                      type="url"
-                      id="cover"
-                      name="cover"
-                      className="adminDropDownInput"
-                      value={formData.cover}
-                      onChange={handleChange}
                     />
                   </div>
                 </div>
@@ -260,7 +181,6 @@ const CreateEventForm = () => {
             </div>
           </div>
         </div>
-        {/* </div> */}
       </center>
     </div>
   );

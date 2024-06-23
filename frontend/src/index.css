@@ -6,7 +6,6 @@
 
 :root {
   --font-base: "DM Sans", sans-serif;
-
   --primary-color: #f6f6f6;
   --secondary-color: #f87171;
   --darker-secondary-color: #f05454;
@@ -58,11 +57,11 @@
 }
 
 @layer utilities {
-    .rtl {
-        direction: rtl;
-    }
+  .rtl {
+    direction: rtl;
+  }
 }
 
 [x-cloak=""] {
-    display: none;
+  display: none;
 }

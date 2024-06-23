@@ -1,7 +1,13 @@
 import React from "react";
-import { Link } from "react-router-dom";
 
 const Home = () => {
+  const handleLogin = () => {
+    window.location.href = "/login";
+  };
+
+  const handleSignup = () => {
+    window.location.href = "/signup";
+  };
   return (
     <section className="">
       <br />
@@ -10,16 +16,9 @@ const Home = () => {
       <br />
       <br />
       <div className="max-w-6xl mx-auto px-4 sm:px-6 relative">
-        {/* Hero content */}
         <div className="relative pt-32 pb-10 md:pt-40 md:pb-16">
-          {/* Section header */}
           <div className="max-w-3xl mx-auto text-center pb-12 md:pb-16">
             <h1 className="h1 m-2">
-              {"<In"}
-              <span className="text-[color:var(--darker-secondary-color)]">
-                VIT
-              </span>
-              {"e />"}
               <p className="mt-3 text-5xl text-gray-500">
                 {"Event Management"}
               </p>
@@ -30,13 +29,19 @@ const Home = () => {
             </p>
             <div className="max-w-xs mx-auto sm:max-w-none sm:flex sm:justify-center">
               <div>
-                <button className="btn text-white bg-[color:var(--darker-secondary-color)] hover:bg-[color:var(--secondary-color)] w-full mb-4 sm:w-auto sm:mb-0">
-                  <Link to="/login"> SignIn</Link>
+                <button
+                  onClick={handleLogin}
+                  className="btn text-white bg-[color:var(--darker-secondary-color)] hover:bg-[color:var(--secondary-color)] w-full mb-4 sm:w-auto sm:mb-0"
+                >
+                  Login
                 </button>
               </div>
               <div>
-                <button className="btn text-white bg-gray-700 hover:bg-gray-800 w-full sm:w-auto sm:ml-4">
-                  <Link to="/signup"> SignUp</Link>
+                <button
+                  onClick={handleSignup}
+                  className="btn text-white bg-gray-700 hover:bg-gray-800 w-full sm:w-auto sm:ml-4"
+                >
+                  Sign Up
                 </button>
               </div>
             </div>

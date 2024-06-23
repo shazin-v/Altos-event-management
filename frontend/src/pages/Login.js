@@ -1,7 +1,6 @@
 import React from "react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import "../Login.css";
 import axios from "axios";
 
 const Login = () => {
@@ -19,7 +18,8 @@ const Login = () => {
       });
       if (response.status === 200) {
         alert("Login successful!");
-        sessionStorage.setItem("token", response.data.token);
+        const token = response.data.access;
+        sessionStorage.setItem("token", `Bearer ${token}`);
         navigate("/homepage");
       } else {
         console.error(`Failed with status code ${response.status}`);
@@ -31,12 +31,19 @@ const Login = () => {
 
   return (
     <>
-      <div className="form-container">
-        <center>
-          <fieldset>
-            <legend>Sign In</legend>
-            <form onSubmit={handleSubmit}>
-              <label>Enter your Email Address: </label>
+      <div className="form-container flex items-center justify-center h-screen">
+        <fieldset className="bg-white shadow-lg rounded-lg p-8 max-w-md w-full">
+          <legend className="text-2xl font-bold mb-4 text-center">
+            Sign In
+          </legend>
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="flex flex-col">
+              <label
+                htmlFor="email"
+                className="block text-gray-700 font-bold mb-1"
+              >
+                Enter your Email Address:
+              </label>
               <input
                 type="email"
                 id="email"
@@ -44,9 +51,16 @@ const Login = () => {
                 placeholder="xyz@gmail.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
+                className="px-3 py-2 border rounded-lg focus:outline-none focus:border-blue-500"
               />
-              <br />
-              <label>Enter Password: </label>
+            </div>
+            <div className="flex flex-col">
+              <label
+                htmlFor="password"
+                className="block text-gray-700 font-bold mb-1"
+              >
+                Enter Password:
+              </label>
               <input
                 type="password"
                 id="password"
@@ -54,13 +68,18 @@ const Login = () => {
                 placeholder="New password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
+                className="px-3 py-2 border rounded-lg focus:outline-none focus:border-blue-500"
               />
-              <br />
-              <span className="status"></span>
-              <button type="submit">Submit</button>
-            </form>
-          </fieldset>
-        </center>
+            </div>
+            <span className="status text-green-500"></span>
+            <button
+              type="submit"
+              className="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg focus:outline-none"
+            >
+              Submit
+            </button>
+          </form>
+        </fieldset>
       </div>
     </>
   );

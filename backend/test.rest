@@ -1,100 +1,91 @@
-POST http://127.0.0.1:8000/login/
-Content-Type: application/json
-
-{ "username": "qwe", "password": "741"}
-
-###
-
+### Signup
 POST http://127.0.0.1:8000/signup/
 Content-Type: application/json
 
-{ "username": "qwe", "first_name":"poi", "password": "741"}
+{
+  "username": "test@gmail.com",
+  "first_name": "test",
+  "password": "123"
+}
+
+### Login
+POST http://127.0.0.1:8000/login/
+Content-Type: application/json
+
+{
+  "username": "test@gmail.com",
+  "password": "123"
+}
 
 ###
 
-# GET http://127.0.0.1:8000/test_token
-# Content-Type: application/json
-
-# {}
-
-
-
-
-
-### Get JWT Token
+# Get JWT Token and set the token variable
 POST http://127.0.0.1:8000/api/token/
 Content-Type: application/json
 
 {
-  "username": "qwe",
+  "username": "hello@gmail.com",
   "password": "741"
-}
+} 
+###
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzE5MjQ3NzE4LCJpYXQiOjE3MTkxNjEzMTgsImp0aSI6IjcyNWFjOWFhNmNhYzQ0NDZhMjc5MzFhYTE0MDIwY2IwIiwidXNlcl9pZCI6NH0.VsN8Dbw_orjxoiuBJXuRWF_rMdxEYYUOP0z6AXkpDJI
 
-### Refresh JWT Token
-POST http://127.0.0.1:8000/api/token/refresh/
-Content-Type: application/json
+###
 
-{
-  "refresh": "your_refresh_token_here"
-}
-
-
-
-### Create Event (replace ACCESS_TOKEN with the obtained access token)
+### Create Event
 POST http://127.0.0.1:8000/events/
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzE5MTIwODg3LCJpYXQiOjE3MTkxMjA1ODcsImp0aSI6IjdkZmE0MWQ5MmY1MzRjN2Q4NDc4ODc2MjA4YjU2NGQyIiwidXNlcl9pZCI6Mn0.JhPO6yFzbUAu3RXBLGDRXwK4aifyxZO3rqQBqnJT7eE
+Authorization: Bearer {{token}}
 
 {
   "title": "Sample Event",
   "description": "This is a sample event.",
-  "date": "2024-07-01T12:00:00Z",
-  "capacity": 100
+  "date": "2024-07-01",
+  "time": "12:30:00",
+  "capacity": 100,
+  "user": 2
 }
 
 ### List Events
 GET http://127.0.0.1:8000/events/
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzE5MTIwODg3LCJpYXQiOjE3MTkxMjA1ODcsImp0aSI6IjdkZmE0MWQ5MmY1MzRjN2Q4NDc4ODc2MjA4YjU2NGQyIiwidXNlcl9pZCI6Mn0.JhPO6yFzbUAu3RXBLGDRXwK4aifyxZO3rqQBqnJT7eE
+Authorization: Bearer {{token}}
 
 ###
 
 ### Event Detail (replace EVENT_ID with the actual event ID)
 GET http://127.0.0.1:8000/events/1/
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzE5MTIwODg3LCJpYXQiOjE3MTkxMjA1ODcsImp0aSI6IjdkZmE0MWQ5MmY1MzRjN2Q4NDc4ODc2MjA4YjU2NGQyIiwidXNlcl9pZCI6Mn0.JhPO6yFzbUAu3RXBLGDRXwK4aifyxZO3rqQBqnJT7eE
+Authorization: Bearer {{token}}
 
 ###
 
 ### Update Event (replace EVENT_ID with the actual event ID)
 PUT http://127.0.0.1:8000/events/1/
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzE5MTIwODg3LCJpYXQiOjE3MTkxMjA1ODcsImp0aSI6IjdkZmE0MWQ5MmY1MzRjN2Q4NDc4ODc2MjA4YjU2NGQyIiwidXNlcl9pZCI6Mn0.JhPO6yFzbUAu3RXBLGDRXwK4aifyxZO3rqQBqnJT7eE
+Authorization: Bearer {{token}}
 
 {
   "title": "Updated Event Title",
   "description": "Updated description.",
   "date": "2024-07-01T14:00:00Z",
-  "capacity": 150
+  "capacity": 150,
+  "user": 2
 }
 
 ### Delete Event (replace EVENT_ID with the actual event ID)
-DELETE http://127.0.0.1:8000/events/1/
+DELETE http://127.0.0.1:8000/events/2/
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzE5MTIwODg3LCJpYXQiOjE3MTkxMjA1ODcsImp0aSI6IjdkZmE0MWQ5MmY1MzRjN2Q4NDc4ODc2MjA4YjU2NGQyIiwidXNlcl9pZCI6Mn0.JhPO6yFzbUAu3RXBLGDRXwK4aifyxZO3rqQBqnJT7eE
+Authorization: Bearer {{token}}
 
 ###
 
 ### Book Event (replace EVENT_ID with the actual event ID)
 POST http://127.0.0.1:8000/bookings/
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzE5MTIxMjYxLCJpYXQiOjE3MTkxMjA5NjEsImp0aSI6IjU4OTZhMDZkY2IxODRhZjNhYTAxMjZkNTU0NWU4ZGM2IiwidXNlcl9pZCI6Mn0.-VorYIu0E49C5ATSGMUvChF_bW4doD0yAzcsGoixGig
+Authorization: Bearer {{token}}
 
 {
-  "event": 2
+  "event": 1
 }
 
-### List User Events
-GET http://127.0.0.1:8000/user/events/
-Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzE5MTIxMjYxLCJpYXQiOjE3MTkxMjA5NjEsImp0aSI6IjU4OTZhMDZkY2IxODRhZjNhYTAxMjZkNTU0NWU4ZGM2IiwidXNlcl9pZCI6Mn0.-VorYIu0E49C5ATSGMUvChF_bW4doD0yAzcsGoixGig

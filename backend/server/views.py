@@ -17,6 +17,7 @@ from rest_framework import generics, permissions
 # from .serializers import EventSerializer, BookingSerializer
 # from rest_framework.response import Response
 # from rest_framework import status
+from rest_framework_simplejwt.tokens import RefreshToken
 from django.core.mail import send_mail
 from django.conf import settings
 
@@ -50,13 +51,18 @@ def signup(request):
 
 @api_view(['POST'])
 def login(request):
-    user = get_object_or_404(User, username = request.data['username'])
+    user = get_object_or_404(User, username=request.data['username'])
     if not user.check_password(request.data['password']):
-        return Response({"details": "not found"}, status=status.HTTP_404_NOT_FOUND)
-    token, created = Token.objects.get_or_create(user=user)
+        return Response({"details": "Invalid credentials"}, status=status.HTTP_401_UNAUTHORIZED)
+
+    refresh = RefreshToken.for_user(user)
     serializer = UserSerializer(instance=user)
-    return Response({"token":token.key, "user":serializer.data})
-    # return Response({})
+
+    return Response({
+        'refresh': str(refresh),
+        'access': str(refresh.access_token),
+        'user': serializer.data
+    })
 
 
 
@@ -67,9 +73,15 @@ def login(request):
 
 
 class EventListCreate(generics.ListCreateAPIView):
-    queryset = Event.objects.all()
+    # queryset = Event.objects.all()
     serializer_class = EventSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+
+    def get_queryset(self):
+        return Event.objects.filter(user=self.request.user)
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
 
 class EventDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Event.objects.all()
@@ -82,8 +94,8 @@ class BookingCreate(generics.CreateAPIView):
 
     def perform_create(self, serializer):
         event = serializer.validated_data['event']
-        if event.is_fully_booked:
-            return Response({"error": "Event is fully booked"}, status=status.HTTP_400_BAD_REQUEST)
+        # if event.is_fully_booked:
+            # return Response({"error": "Event is fully booked"}, status=status.HTTP_400_BAD_REQUEST)
         booking = serializer.save(user=self.request.user)
         
         # Send confirmation email
