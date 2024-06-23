@@ -1,0 +1,100 @@
+POST http://127.0.0.1:8000/login/
+Content-Type: application/json
+
+{ "username": "qwe", "password": "741"}
+
+###
+
+POST http://127.0.0.1:8000/signup/
+Content-Type: application/json
+
+{ "username": "qwe", "first_name":"poi", "password": "741"}
+
+###
+
+# GET http://127.0.0.1:8000/test_token
+# Content-Type: application/json
+
+# {}
+
+
+
+
+
+### Get JWT Token
+POST http://127.0.0.1:8000/api/token/
+Content-Type: application/json
+
+{
+  "username": "qwe",
+  "password": "741"
+}
+
+### Refresh JWT Token
+POST http://127.0.0.1:8000/api/token/refresh/
+Content-Type: application/json
+
+{
+  "refresh": "your_refresh_token_here"
+}
+
+
+
+### Create Event (replace ACCESS_TOKEN with the obtained access token)
+POST http://127.0.0.1:8000/events/
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzE5MTIwODg3LCJpYXQiOjE3MTkxMjA1ODcsImp0aSI6IjdkZmE0MWQ5MmY1MzRjN2Q4NDc4ODc2MjA4YjU2NGQyIiwidXNlcl9pZCI6Mn0.JhPO6yFzbUAu3RXBLGDRXwK4aifyxZO3rqQBqnJT7eE
+
+{
+  "title": "Sample Event",
+  "description": "This is a sample event.",
+  "date": "2024-07-01T12:00:00Z",
+  "capacity": 100
+}
+
+### List Events
+GET http://127.0.0.1:8000/events/
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzE5MTIwODg3LCJpYXQiOjE3MTkxMjA1ODcsImp0aSI6IjdkZmE0MWQ5MmY1MzRjN2Q4NDc4ODc2MjA4YjU2NGQyIiwidXNlcl9pZCI6Mn0.JhPO6yFzbUAu3RXBLGDRXwK4aifyxZO3rqQBqnJT7eE
+
+###
+
+### Event Detail (replace EVENT_ID with the actual event ID)
+GET http://127.0.0.1:8000/events/1/
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzE5MTIwODg3LCJpYXQiOjE3MTkxMjA1ODcsImp0aSI6IjdkZmE0MWQ5MmY1MzRjN2Q4NDc4ODc2MjA4YjU2NGQyIiwidXNlcl9pZCI6Mn0.JhPO6yFzbUAu3RXBLGDRXwK4aifyxZO3rqQBqnJT7eE
+
+###
+
+### Update Event (replace EVENT_ID with the actual event ID)
+PUT http://127.0.0.1:8000/events/1/
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzE5MTIwODg3LCJpYXQiOjE3MTkxMjA1ODcsImp0aSI6IjdkZmE0MWQ5MmY1MzRjN2Q4NDc4ODc2MjA4YjU2NGQyIiwidXNlcl9pZCI6Mn0.JhPO6yFzbUAu3RXBLGDRXwK4aifyxZO3rqQBqnJT7eE
+
+{
+  "title": "Updated Event Title",
+  "description": "Updated description.",
+  "date": "2024-07-01T14:00:00Z",
+  "capacity": 150
+}
+
+### Delete Event (replace EVENT_ID with the actual event ID)
+DELETE http://127.0.0.1:8000/events/1/
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzE5MTIwODg3LCJpYXQiOjE3MTkxMjA1ODcsImp0aSI6IjdkZmE0MWQ5MmY1MzRjN2Q4NDc4ODc2MjA4YjU2NGQyIiwidXNlcl9pZCI6Mn0.JhPO6yFzbUAu3RXBLGDRXwK4aifyxZO3rqQBqnJT7eE
+
+###
+
+### Book Event (replace EVENT_ID with the actual event ID)
+POST http://127.0.0.1:8000/bookings/
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzE5MTIxMjYxLCJpYXQiOjE3MTkxMjA5NjEsImp0aSI6IjU4OTZhMDZkY2IxODRhZjNhYTAxMjZkNTU0NWU4ZGM2IiwidXNlcl9pZCI6Mn0.-VorYIu0E49C5ATSGMUvChF_bW4doD0yAzcsGoixGig
+
+{
+  "event": 2
+}
+
+### List User Events
+GET http://127.0.0.1:8000/user/events/
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzE5MTIxMjYxLCJpYXQiOjE3MTkxMjA5NjEsImp0aSI6IjU4OTZhMDZkY2IxODRhZjNhYTAxMjZkNTU0NWU4ZGM2IiwidXNlcl9pZCI6Mn0.-VorYIu0E49C5ATSGMUvChF_bW4doD0yAzcsGoixGig
