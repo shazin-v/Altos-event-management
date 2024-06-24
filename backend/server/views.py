@@ -1,5 +1,3 @@
-# create all endpoints here
-
 from django.http import JsonResponse
 from .models import User, Event, Booking
 from .serializers import UserSerializer, EventSerializer, BookingSerializer
@@ -9,33 +7,11 @@ from rest_framework.response import Response
 from django.contrib.auth.models import User 
 from rest_framework.authtoken.models import Token
 from django.shortcuts import get_object_or_404
-
-
-
 from rest_framework import generics, permissions
-# from .models import Event, Booking
-# from .serializers import EventSerializer, BookingSerializer
-# from rest_framework.response import Response
-# from rest_framework import status
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.core.mail import send_mail
 from django.conf import settings
 
-
-# @api_view(['GET','POST'])
-# def user_list(request):
-
-#     if request.method == 'GET':
-#         users = User.objects.all()
-#         # many=True to return multiple objects
-#         serializer = UserSerializer(users, many=True)
-#         return Response({"Users":serializer.data})
-
-#     if request.method == 'POST':
-#         serializer = UserSerializer(data=request.data)
-#         if serializer.is_valid():
-#             serializer.save()
-#             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 @api_view(['POST'])
 def signup(request):
@@ -54,10 +30,8 @@ def login(request):
     user = get_object_or_404(User, username=request.data['username'])
     if not user.check_password(request.data['password']):
         return Response({"details": "Invalid credentials"}, status=status.HTTP_401_UNAUTHORIZED)
-
     refresh = RefreshToken.for_user(user)
     serializer = UserSerializer(instance=user)
-
     return Response({
         'refresh': str(refresh),
         'access': str(refresh.access_token),
@@ -65,21 +39,11 @@ def login(request):
     })
 
 
-
-# @api_view(['GET'])
-# def test_token(request):
-#     return Response({})
-
-
-
 class EventListCreate(generics.ListCreateAPIView):
-    # queryset = Event.objects.all()
     serializer_class = EventSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
-
     def get_queryset(self):
         return Event.objects.filter(user=self.request.user)
-
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
 
@@ -94,8 +58,6 @@ class BookingCreate(generics.CreateAPIView):
 
     def perform_create(self, serializer):
         event = serializer.validated_data['event']
-        # if event.is_fully_booked:
-            # return Response({"error": "Event is fully booked"}, status=status.HTTP_400_BAD_REQUEST)
         booking = serializer.save(user=self.request.user)
         
         # Send confirmation email
@@ -106,7 +68,6 @@ class BookingCreate(generics.CreateAPIView):
             [self.request.user.email],
             fail_silently=False,
         )
-        # return Response(serializer.data, status=status.HTTP_201_CREATED)
         return booking
 
 

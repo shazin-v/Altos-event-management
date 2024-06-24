@@ -39,7 +39,6 @@ const CreateEventForm = () => {
           },
         }
       );
-
       if (response.status === 201) {
         alert("Event Created Successfully");
         window.location.href = "/homepage";

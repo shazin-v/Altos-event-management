@@ -1,5 +1,4 @@
-import React from "react";
-import { useState } from "react";
+import { React, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
@@ -71,7 +70,6 @@ const Login = () => {
                 className="px-3 py-2 border rounded-lg focus:outline-none focus:border-blue-500"
               />
             </div>
-            <span className="status text-green-500"></span>
             <button
               type="submit"
               className="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg focus:outline-none"

@@ -10,6 +10,10 @@ export default function Dropdown({ adminData }) {
     navigate("/login");
   };
 
+  const handleBookings = () => {
+    navigate("/bookings");
+  };
+
   return (
     <>
       <div className="mb-[8vh]">
@@ -20,7 +24,7 @@ export default function Dropdown({ adminData }) {
               <ul className="flex items-center">
                 <li className="mr-4 cursor-pointer">
                   <button
-                    // onClick={handleLogout}
+                    onClick={handleBookings}
                     className="btn text-white bg-[color:var(--darker-secondary-color)] hover:bg-[color:var(--secondary-color)] w-full mb-4 sm:w-auto sm:mb-0"
                   >
                     My bookings

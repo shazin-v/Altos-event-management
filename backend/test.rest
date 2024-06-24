@@ -18,7 +18,6 @@ Content-Type: application/json
 }
 
 ###
-
 # Get JWT Token and set the token variable
 POST http://127.0.0.1:8000/api/token/
 Content-Type: application/json
@@ -28,8 +27,7 @@ Content-Type: application/json
   "password": "741"
 } 
 ###
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzE5MjQ3NzE4LCJpYXQiOjE3MTkxNjEzMTgsImp0aSI6IjcyNWFjOWFhNmNhYzQ0NDZhMjc5MzFhYTE0MDIwY2IwIiwidXNlcl9pZCI6NH0.VsN8Dbw_orjxoiuBJXuRWF_rMdxEYYUOP0z6AXkpDJI
-
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzE5MjkyNzk3LCJpYXQiOjE3MTkyMDYzOTcsImp0aSI6ImFjNjZmMWI0YjE1MTQ5MzA4NTAwYzBhNzE1YTE4OTgzIiwidXNlcl9pZCI6Mn0.0GMQM-zpf4NN4tSOZMc98ACZTq-zIU1kgXP7Hi8Z1Wo
 ###
 
 ### Create Event
@@ -54,27 +52,28 @@ Authorization: Bearer {{token}}
 ###
 
 ### Event Detail (replace EVENT_ID with the actual event ID)
-GET http://127.0.0.1:8000/events/1/
+GET http://127.0.0.1:8000/events/10/
 Content-Type: application/json
 Authorization: Bearer {{token}}
 
 ###
 
 ### Update Event (replace EVENT_ID with the actual event ID)
-PUT http://127.0.0.1:8000/events/1/
+PUT http://127.0.0.1:8000/events/10/
 Content-Type: application/json
 Authorization: Bearer {{token}}
 
 {
   "title": "Updated Event Title",
   "description": "Updated description.",
-  "date": "2024-07-01T14:00:00Z",
+  "date": "1645-12-12",
+  "time": "00:01:00",
   "capacity": 150,
   "user": 2
 }
 
 ### Delete Event (replace EVENT_ID with the actual event ID)
-DELETE http://127.0.0.1:8000/events/2/
+DELETE http://127.0.0.1:8000/events/6/
 Content-Type: application/json
 Authorization: Bearer {{token}}
 
@@ -86,6 +85,10 @@ Content-Type: application/json
 Authorization: Bearer {{token}}
 
 {
-  "event": 1
+  "event_id": 9
 }
 
+###
+### List Bookings
+GET http://127.0.0.1:8000/user/events/
+Authorization: Bearer {{token}}

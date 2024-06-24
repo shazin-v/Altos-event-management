@@ -7,8 +7,8 @@ from django.utils.timezone import localtime
 class Event(models.Model):
     title = models.CharField(max_length=255)
     description = models.TextField()
-    date = models.DateField()  # Separate field for date
-    time = models.TimeField()  # Separate field for time
+    date = models.DateField()  
+    time = models.TimeField() 
     capacity = models.PositiveIntegerField()
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='events')
 
